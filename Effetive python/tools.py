@@ -30,4 +30,3 @@ print('\nBy weight', tools)
 
 power_tools.sort(key=lambda x: x.weight, reverse=True)
 print('\nBy weight', power_tools)
-

@@ -13,6 +13,9 @@ def populate_ranks(votes, ranks):
 
 
 def get_winner(ranks):
+    if not isinstance(ranks):
+
+
     return next(iter(ranks))
 
 ranks = {}

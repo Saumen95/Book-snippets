@@ -81,6 +81,4 @@ class AddableBingoCage(BingoCage):  # <2>
         return self  # <8>
 
 
-
-
 # END ADDABLE_BINGO

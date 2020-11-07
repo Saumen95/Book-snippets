@@ -1,15 +1,3 @@
-"""Transformdict: a mapping that transforms keys on lookup
-
-This module and ``test_transformdict.py`` were extracted from a
-patch contributed to Python by Antoine Pitrou implementing his
-PEP 455 -- Adding a key-transforming dictionary to collections.
-
-As of Nov. 14, 2014, the patch was not yet merged to Python 3.5
-(which is in pre-alpha). The patch is ``transformdict3.patch``,
-part of issue #18986: Add a case-insensitive case-preserving dict.
-
-http://bugs.python.org/issue18986
-"""
 
 from collections.abc import MutableMapping
 
@@ -18,24 +6,11 @@ _sentinel = object()
 
 
 class TransformDict(MutableMapping):
-    '''Dictionary that calls a transformation function when looking
-    up keys, but preserves the original keys.
-
-    >>> d = TransformDict(str.lower)
-    >>> d['Foo'] = 5
-    >>> d['foo'] == d['FOO'] == d['Foo'] == 5
-    True
-    >>> set(d.keys())
-    {'Foo'}
-    '''
 
     __slots__ = ('_transform', '_original', '_data')
 
     def __init__(self, transform, init_dict=None, **kwargs):
-        '''Create a new TransformDict with the given *transform* function.
-        *init_dict* and *kwargs* are optional initializers, as in the
-        dict constructor.
-        '''
+
         if not callable(transform):
             msg = 'expected a callable, got %r'
             raise TypeError(msg % transform.__class__)
@@ -81,7 +56,7 @@ class TransformDict(MutableMapping):
         del self._data[transformed]
         del self._original[transformed]
 
-    # Methods overridden to mitigate the performance overhead.
+    # Methods overridden to solve the performance issue
 
     def clear(self):
         'D.clear() -> None.  Remove all items from D.'
@@ -96,10 +71,7 @@ class TransformDict(MutableMapping):
         return self._data.get(self._transform(key), default)
 
     def pop(self, key, default=_sentinel):
-        '''D.pop(k[,d]) -> v, remove key and return corresponding value.
-           If key is not found, d is returned if given, otherwise
-           KeyError is raised.
-        '''
+
         transformed = self._transform(key)
         if default is _sentinel:
             del self._original[transformed]
@@ -109,9 +81,6 @@ class TransformDict(MutableMapping):
             return self._data.pop(transformed, default)
 
     def popitem(self):
-        '''D.popitem() -> (k, v), remove and return some (key, value) pair
-           as a 2-tuple; but raise KeyError if D is empty.
-        '''
         transformed, value = self._data.popitem()
         return self._original.pop(transformed), value
 
